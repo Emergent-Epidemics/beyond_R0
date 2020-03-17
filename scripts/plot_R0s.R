@@ -8,6 +8,7 @@
 library(reticulate)
 library(googlesheets4)
 library(RColorBrewer)
+library(lamW)
 
 #########
 #Globals#
@@ -53,4 +54,9 @@ bp <- barplot(Z_mean[ord], names = diseases[ord], col = fill[ord], las = 2, hori
 segments(x0 = Z_min[ord], y0 = bp[,1], x1 = Z_max[ord], y1 = bp[,1])
 points(spread_data$`Prop I`[ord], bp[,1], col = "#b2182b", pch = 16, cex = 1.5)
 points(1-(1/spread_data$R0[ord]), bp[,1], col = "#bababa", pch = 15, cex = 1.5)
-points(1-exp(-spread_data$R0[ord]), bp[,1], col = "#4d4d4d", pch = 17, cex = 1.5)
+points(((lambertW0(-exp(-spread_data$R0[ord]))*spread_data$R0[ord])+spread_data$R0[ord])/spread_data$R0[ord], bp[,1], col = "#4d4d4d", pch = 17, cex = 1.5)
+
+R0s <- seq(1, 4, length.out = 1000)
+plot(R0s, 1-(1/R0s), col = "red", type = "l", ylim = c(0,1))
+points(R0s, 1-exp(-R0s), col = "blue", type = "l")
+points(R0s, ((lambertW0(-exp(-R0s))*R0s)+R0s)/R0s, col = "green", type = "l")
